@@ -1,51 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void merge(int vetor[], int comeco, int meio, int fim) {
+    int com1 = comeco, com2 = meio+1, comAux = 0, tam = fim-comeco+1;
+    int *vetAux;
+    vetAux = (int*)malloc(tam * sizeof(int));
 
-void merge(int *saida, int *auxiliar, int inicio, int meio, int fim){
-    int i, j, k;
-    i = inicio;
-    j = meio + 1;
-    k = inicio;
-    while(i <= meio && j <= fim){
-        if(auxiliar[i] < auxiliar[j]){
-            saida[k] = auxiliar[i];
-            i++;
+    while(com1 <= meio && com2 <= fim){
+        if(vetor[com1] < vetor[com2]) {
+            vetAux[comAux] = vetor[com1];
+            com1++;
+        } else {
+            vetAux[comAux] = vetor[com2];
+            com2++;
         }
-        else{
-            saida[k] = auxiliar[j];
-            j++;
-        }
-        k++;
+        comAux++;
     }
 
-    while(i <= meio){
-        saida[k] = auxiliar[i];
-        i++;
-        k++;
+    while(com1 <= meio){  //Caso ainda haja elementos na primeira metade
+        vetAux[comAux] = vetor[com1];
+        comAux++;
+        com1++;
     }
 
-    while(j <= fim){
-        saida[k] = auxiliar[j];
-        j++;
-        k++;
+    while(com2 <= fim) {   //Caso ainda haja elementos na segunda metade
+        vetAux[comAux] = vetor[com2];
+        comAux++;
+        com2++;
     }
-    //Copia os elementos que foram ordenados para o auxiliar
-    for(int p = inicio; p <= fim; p++)
-        auxiliar[p] = saida [p];
+
+    for(comAux = comeco; comAux <= fim; comAux++){    //Move os elementos de volta para o vetor original
+        vetor[comAux] = vetAux[comAux-comeco];
+    }
+    
+    free(vetAux);
 }
 
+void mergeSort(int vetor[], int comeco, int fim){
+    if (comeco < fim) {
+        int meio = (fim+comeco)/2;
 
-
-void mergeSort(int *saida, int *auxiliar, int inicio, int fim){
-    if(inicio < fim){
-        int meio = (inicio + fim) / 2;
-        mergeSort(saida, auxiliar, inicio, meio);
-        mergeSort(saida, auxiliar, meio + 1, fim);
-        merge(saida, auxiliar, inicio, meio, fim);
+        mergeSort(vetor, comeco, meio);
+        mergeSort(vetor, meio+1, fim);
+        merge(vetor, comeco, meio, fim);
     }
 }
-
 int main (){
 
     return 0;
